@@ -17,31 +17,73 @@ const topropingOptions = ["5.5", "5.6", "5.7", "5.8", "5.9",
                           "5.14a", "5.14b", "5.14c", "5.14d",
                           "5.15a", "5.15b", "5.15c", "5.15d"]
 
-class Grades extends Component {
-  difficultyField(){
+class ButtonIncrement extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: props.count
+    }
+    this.add = this.props.add.bind(this);
+    this.subtract = this.props.subtract.bind(this);
+  }
+  render() {
     return (
-        <select onChange={this.props.handleChange} name="grade">
-          {this.difficulties.map((grade, idx) => (
-            <option key={`${idx}`} value={grade}>{grade}</option>
+        <span>
+          <button onClick={this.add} className={this.props.className}>+</button>
+          {this.state.count}
+          <button onClick={this.subtract} className={this.props.className}>-</button>
+          <br/>
+        </span>
+    )
+  }
+}
+
+
+class Grades extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    }
+  }
+  add() {
+    var newCount = this.state.count + 1
+    this.setState({count: newCount})
+  }
+  subtract() {
+    var newCount = Math.max(this.state.count - 1, 0)
+    this.setState({count: newCount})
+  }
+
+  finishFields(){
+    return (
+    finishOptions.map((finish, idx) => (
+      <div key={`${idx}`} className="flex-column">
+      {finish}
+      {this.difficulties.map((grade, idx) => (
+        <div key={`${idx}`}>
+          {grade}
+        <ButtonIncrement count={this.state.count} add={this.add} subtract={this.subtract} grade={grade} finish={finish} className="increment"></ButtonIncrement>
+        </div>
           ))}
-        </select>
+      </div>
+    ))
     )
   }
 
   render() {
     this.difficulties = this.props.route_type === "boulder" ? boulderingOptions : topropingOptions;
-    var renderDifficulty = (<div> <h5> Please select type </h5> </div>)
+    var renderDifficulty = (<div></div>)
     if (this.props.route_type) {
-      var renderDifficulty = this.difficultyField()
+      renderDifficulty = this.finishFields()
     }
 
     return (
       <div>
-        <label>
-          Grade:
+        <h1>Grades</h1>
+        <div className="flex-row">
           {renderDifficulty}
-        </label>
-        <br />
+        </div>
       </div>
     )
   }
@@ -53,7 +95,7 @@ class RouteType extends Component {
       <div>
       <label>
         Route type:
-        <select onChange={this.props.handleChange} name="route_type">
+        <select onChange={this.props.handleChange} name="route_type" className="routetype">
             {routeTypes.map((routeType, idx) => (
               <option key={`${idx}`} value={routeType}>{routeType}</option>
             ))}
@@ -65,31 +107,13 @@ class RouteType extends Component {
   }
 }
 
-class Finish extends Component {
-  render() {
-    return (
-      <div>
-        <label>
-          Finish:
-          <select onChange={this.props.handleChange} name="finish">
-              {finishOptions.map((finish, idx) => (
-                <option key={`${idx}`} value={finish}>{finish}</option>
-              ))}
-          </select>
-        </label>
-        <br />
-      </div>
-    )
-  }
-}
-
 
 class Sessions extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      difficulty: "",
-      finish: "",
+      difficulty: [],
+      finish: [],
       route_type: ""
     };
     this.handleChange = this.handleChange.bind(this);
@@ -115,12 +139,8 @@ class Sessions extends Component {
   
     return (
     <div>
-      <h1> This should be a form that submits Sessions</h1>
-      <form onSubmit={this.handleSubmit}>
-        <RouteType handleChange={this.handleChange}/>
-        <Grades route_type={this.state.route_type} handleChange={this.handleChange}/>
-        <Finish handleChange={this.handleChange}/>
-      </form>
+      <RouteType handleChange={this.handleChange}/>
+      <Grades route_type={this.state.route_type} handleChange={this.handleChange}/>
     </div>
     )
   }
