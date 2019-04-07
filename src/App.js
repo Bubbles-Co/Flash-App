@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { Switch, Route, BrowserRouter, Link } from 'react-router-dom'
+import {DataSelect} from "./PlotChart";
 
 const finishOptions = ["Onsight", "Flash", "Send", "Project"]
 const routeTypes = ["boulder", "top-rope", "sport", "trad", "ice", "mixed"]
@@ -141,6 +142,7 @@ const Home = () => (
 const Routes = () => (
   <div>
     <h1>This is where you view stats on routes</h1>
+    <DataSelect />
   </div>
 )
 
