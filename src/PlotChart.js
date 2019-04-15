@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
-import { Line } from 'react-chartjs-2';
+import { Line, Doughnut, Radar} from 'react-chartjs-2';
 import myData from "./data/data.json";
-
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+import "./App.css";
 
 let boulderingDifficulties = ["V0", "V1", "V2", "V3", "V4", "V5", "V6"]
 let topropingGrades = ["5.10a", "5.10b", "5.10c", "5.10d", "5.11a", "5.11b", "5.11c", "5.11d", "5.12a"]
 let colors = ["yellow", "green", "red", "blue", "pink", "purple", "black", "gray", "orange"]
+let skillsType = ["Slab", "Crack", "Crimp", "Overhang", "Vertical"]
+let dummySkillsType = {data: [25, 5, 40, 60, 70], label: "Skill chart"}
 
 
 
@@ -24,7 +18,8 @@ export class DataSelect extends Component {
       data: myData,
       user: "",
       route_type: "",
-      chartData: {}
+      chartData: {},
+      barChartData: {}
     }
 
     this.onUserSelect = this.onUserSelect.bind(this);
@@ -42,13 +37,13 @@ export class DataSelect extends Component {
 
   onUserSelect(e) {
     this.setState({
-      user: e.target.value
+      user: e.target.value,
     })
   }
 
   onTypeSelect(e) {
     this.setState({
-      route_type: e.target.value
+      route_type: e.target.value,
     })
   }
 
@@ -63,6 +58,8 @@ export class DataSelect extends Component {
     }
     else if (this.state.route_type == "Top-roping") {
       grades = topropingGrades
+    } else {
+      return
     }
 
     let datasets = []
@@ -76,16 +73,36 @@ export class DataSelect extends Component {
         fill: false
       })
     }
-
-    if (!grades.length) {
-      return
+    
+    let barDatasets = {label: "Overall stats", title: "All time"}
+    let barData = []
+    for (var j = 0; j < grades.length; ++j) {
+      barData.push(0);
     }
+    for (var i = 0; i < dataSlice.length; ++i) {
+      for (var j = 0; j < grades.length; ++j) {
+        barData[j] += dataSlice[i][grades[j]]
+      }
+    }
+    barDatasets.data = barData
+    barDatasets.backgroundColor = colors.slice(0,grades.length)
+
+
+  
     this.setState({
       chartData: {
         labels: dataSlice.map(d => {
           return d.Timestamp
         }),
-        datasets: datasets
+        datasets: datasets,
+      },
+      barChartData: {
+        labels: grades,
+        datasets: [barDatasets]
+      },
+      radarChartData: {
+        labels: skillsType,
+        datasets: [dummySkillsType]
       }
     })
   }
@@ -93,27 +110,35 @@ export class DataSelect extends Component {
   render() {
     return (
       <div>
-        <select onChange={this.onUserSelect}>
-          {
-            this.getUsers().map(user => {
-              return <option key={user} value={user}>{user}</option>
-            })
-          }
-        </select>
-        <select onChange={this.onTypeSelect}>
-          <option value="Bouldering">Bouldering</option>
-          <option value="Top-roping">Top-roping</option>
-        </select>
-        <button onClick={this.onSubmit}>
-          plot!
-        </button>
-        <Chart data={this.state.chartData}/>
+        <div>
+          <select onChange={this.onUserSelect}>
+            {
+              this.getUsers().map(user => {
+                return <option key={user} value={user}>{user}</option>
+              })
+            }
+          </select>
+          <select onChange={this.onTypeSelect}>
+            <option value="Bouldering">Bouldering</option>
+            <option value="Top-roping">Top-roping</option>
+          </select>
+          <button onClick={this.onSubmit}>
+            plot!
+          </button>
+        </div>
+        <div>
+          <Chart data={this.state.chartData}/>
+        </div>
+        <div className="flex-row">
+          <div className="total-stats"><Doughnut data={this.state.barChartData}/></div>
+          <div className="skill-radar"><Radar data={this.state.radarChartData}/></div>
+        </div>
       </div>
     )
   }
 }
 
-export class Chart extends Component {
+class Chart extends Component {
   render() {
     return (
       <div className="chart">
@@ -125,6 +150,26 @@ export class Chart extends Component {
             maintainAspectRatio: false
           }}
         />
+      </div>
+    )
+  }
+}
+
+class BarChart extends Component {
+  render() {
+    return (
+      <div className="barChart">
+        
+      </div>
+    )
+  }
+}
+
+class RadarChart extends Component {
+  render() {
+    return (
+      <div className="radarChart">
+        
       </div>
     )
   }

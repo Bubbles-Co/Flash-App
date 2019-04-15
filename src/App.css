@@ -22,6 +22,21 @@
   color: #61dafb;
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.skill-radar {
+  display: flex;
+  flex: 1;
+}
+
+.total-stats {
+  display: flex;
+  flex: 1;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
