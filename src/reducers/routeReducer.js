@@ -1,4 +1,4 @@
-import { ADD_ROUTE, REMOVE_ROUTE } from '../actions';
+import { ADD_ROUTE, REMOVE_ROUTE } from '../actions/addRoutes';
 
 function routes(state = [], action) {
   switch (action.type) {

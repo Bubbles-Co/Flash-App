@@ -6,6 +6,8 @@ const Header = () => (
     <nav>
       <ul>
         <li><Link to='/'>Home</Link></li>
+        <li><Link to='/login'>Login</Link></li>
+        <li><Link to='/signup'>Signup</Link></li>
         <li><Link to='/routes'>Routes</Link></li>
         <li><Link to='/sessions'>Sessions</Link></li>
       </ul>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addRoute } from '../actions';
+import { addRoute } from '../actions/addRoutes';
 
 const finishOptions = ["Onsight", "Flash", "Send", "Project"]
 const boulderingOptions = ["v0", "v1", "v2", "v3",
