@@ -1,9 +1,8 @@
 import React from "react";
 import { Field, reduxForm } from "redux-form";
-import axios from 'axios';
+import axios from "axios";
 
-let LoginForm = props => {
-  const { handleSubmit } = props;
+let LoginForm = ({ handleSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <Field name="username" component="input" type="text" />
@@ -17,19 +16,16 @@ LoginForm = reduxForm({
   form: "user" // a unique name for this form
 })(LoginForm);
 
-class LoginPage extends React.Component {
-  async loginAction(values) {
-    const { username, password } = values;
-    let res = await axios.post("http://localhost:3000/sign-in", {
-      username: username,
-      password: password
-    });
-    console.log(res);
-  }
-
-  render() {
-    return <LoginForm onSubmit={this.loginAction} />;
-  }
+async function loginAction({ username, password }) {
+  let res = await axios.post("http://localhost:3000/sign-in", {
+    username: username,
+    password: password
+  });
+  console.log(res);
 }
+
+const LoginPage = () => {
+  return <LoginForm onSubmit={loginAction} />;
+};
 
 export default LoginPage;

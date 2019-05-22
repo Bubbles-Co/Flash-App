@@ -1,23 +1,18 @@
-import { ADD_ROUTE, REMOVE_ROUTE } from '../actions/addRoutes';
+import { ADD_ROUTE, REMOVE_ROUTE } from "../actions/addRoutes";
 
 function routes(state = [], action) {
   switch (action.type) {
     case ADD_ROUTE:
-      return [
-        ...state,
-        {
-          finish: action.finish,
-          grade: action.grade
-        }
-      ]
+      var { finish, grade, now } = action.payload;
+      return [...state, { finish, grade, now }];
     case REMOVE_ROUTE:
-      var dropIndex = state.findIndex(r => ((r.finish === action.finish) & (r.grade === action.grade)))
-      return [
-        ...state.slice(0, dropIndex),
-        ...state.slice(dropIndex + 1)
-      ]
+      var { finish, grade } = action.payload;
+      let dropIndex = state.findIndex(
+        r => (r.finish === finish) & (r.grade === grade)
+      );
+      return [...state.slice(0, dropIndex), ...state.slice(dropIndex + 1)];
     default:
-      return state
+      return state;
   }
 }
 
