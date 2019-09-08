@@ -94,6 +94,8 @@ function Dashboard(props) {
   const handleRangeSelect = date => {
     if (date === undefined) {
       setDispMessage("Please select a date range :)");
+      setSessionValues([]);
+      setSesionRoutesCount([]);
       return;
     }
     const startDate = date instanceof Array ? date[0][0] : date;

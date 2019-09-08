@@ -48,7 +48,7 @@ function AppBar(props) {
           <Collapsible direction="horizontal" open={showSideBar}>
             <Box
               flex
-              width="small"
+              width="medium"
               background="light-2"
               elevation="small"
               align="center"
